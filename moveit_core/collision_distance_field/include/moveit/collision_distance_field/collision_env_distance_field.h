@@ -156,6 +156,12 @@ public:
   virtual void checkCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state,
                               const AllowedCollisionMatrix& acm, GroupStateRepresentationPtr& gsr) const;
 
+  void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                              const moveit_msgs::CollisionObject& object) const override;
+  void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                              const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const override;
+
+
   void checkRobotCollision(const CollisionRequest& req, CollisionResult& res,
                            const moveit::core::RobotState& state) const override;
 

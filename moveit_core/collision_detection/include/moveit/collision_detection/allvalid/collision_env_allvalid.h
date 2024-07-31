@@ -72,5 +72,11 @@ public:
 
   void distanceSelf(const DistanceRequest& req, DistanceResult& res,
                     const moveit::core::RobotState& state) const override;
+
+  void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                    const moveit_msgs::CollisionObject& object) const override;
+  void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                    const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const override;
+  
 };
 }  // namespace collision_detection
