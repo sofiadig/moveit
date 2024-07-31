@@ -45,6 +45,8 @@
 
 #include <moveit/collision_detection_fcl/fcl_compat.h>
 
+// Test number 2
+
 #if (MOVEIT_FCL_VERSION >= FCL_VERSION_CHECK(0, 6, 0))
 #include <fcl/broadphase/broadphase_dynamic_AABB_tree.h>
 #endif
