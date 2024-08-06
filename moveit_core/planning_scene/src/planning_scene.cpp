@@ -459,25 +459,27 @@ void PlanningScene::pushDiffs(const PlanningScenePtr& scene)
   }
 }
 
-// // ##############################################################################################################
+// ##############################################################################################################
 
-// void PlanningScene::checkCollision(const collision_detection::CollisionRequest& req,
-//                                    collision_detection::CollisionResult& res,
-//                                    const moveit_msgs::CollisionObject& object) const
-// {
-//   checkCollision(req, res, object, getAllowedCollisionMatrix());
-// }
+void PlanningScene::checkCollision(const collision_detection::CollisionRequest& req,
+                                   collision_detection::CollisionResult& res,
+                                   const moveit_msgs::CollisionObject& object) const
+{
+  ROS_INFO("Hello from PlanningScene::checkCollision().");
+  //checkCollision(req, res, object, getAllowedCollisionMatrix());
+}
 
-// void PlanningScene::checkCollision(const collision_detection::CollisionRequest& req,
-//                                    collision_detection::CollisionResult& res,
-//                                    const moveit_msgs::CollisionObject& object,
-//                                    const collision_detection::AllowedCollisionMatrix& acm) const
-// {
-//   // check collision with the world using the padded version
-//   getCollisionEnv()->checkObjectCollision(req, res, object, acm);
-// }
+void PlanningScene::checkCollision(const collision_detection::CollisionRequest& req,
+                                   collision_detection::CollisionResult& res,
+                                   const moveit_msgs::CollisionObject& object,
+                                   const collision_detection::AllowedCollisionMatrix& acm) const
+{
+  ROS_INFO("Hello from PlanningScene::checkCollision().");
+  // check collision with the world using the padded version
+  //getCollisionEnv()->checkObjectCollision(req, res, object, acm);
+}
 
-// // ##############################################################################################################
+// ##############################################################################################################
 
 void PlanningScene::checkCollision(const collision_detection::CollisionRequest& req,
                                    collision_detection::CollisionResult& res)

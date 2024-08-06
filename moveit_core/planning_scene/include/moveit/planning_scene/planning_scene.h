@@ -455,26 +455,26 @@ public:
       If a group name is specified, collision checking is done for that group only. */
   bool isStateColliding(const moveit_msgs::RobotState& state, const std::string& group = "", bool verbose = false) const;
 
-// // ##############################################################################################################
-//     /** \brief Check whether the given object is in collision. */
-//   void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
-//                       moveit_msgs::CollisionObject& object) const
-//   {
-//     checkCollision(req, res, static_cast<const moveit_msgs::CollisionObject&>(object));
-//   }
+// ##############################################################################################################
+    /** \brief Check whether the given object is in collision. */
+  void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
+                      moveit_msgs::CollisionObject& object) const
+  {
+    checkCollision(req, res, static_cast<const moveit_msgs::CollisionObject&>(object));
+  }
 
-//   /** \brief Check whether a specified state (\e robot_state) is in collision. The collision transforms of \e
-//    * robot_state are
-//    * expected to be up to date. */
-//   void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
-//                       const moveit_msgs::CollisionObject& object) const;
+  /** \brief Check whether a specified state (\e robot_state) is in collision. The collision transforms of \e
+   * robot_state are
+   * expected to be up to date. */
+  void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
+                      const moveit_msgs::CollisionObject& object) const;
 
-//     /** \brief Check whether a specified object (\e object) is in collision, with respect to a givenallowed collision matrix (\e acm).
-//      * This variant of the function takes a non-const \e robot_state and updates its link transforms if needed. */
-//   void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
-//                       const moveit_msgs::CollisionObject& object, const collision_detection::AllowedCollisionMatrix& acm) const;
+    /** \brief Check whether a specified object (\e object) is in collision, with respect to a givenallowed collision matrix (\e acm).
+     * This variant of the function takes a non-const \e robot_state and updates its link transforms if needed. */
+  void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
+                      const moveit_msgs::CollisionObject& object, const collision_detection::AllowedCollisionMatrix& acm) const;
 
-// // ##############################################################################################################
+// ##############################################################################################################
 
 
 
