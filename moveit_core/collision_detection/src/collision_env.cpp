@@ -304,4 +304,24 @@ void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& 
     checkRobotCollision(req, res, state, acm);
 }
 
+// // ##################################################################################################################################
+
+// void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& res,
+//                                   const moveit_msgs::CollisionObject& object) const
+// {
+//   //checkSelfCollision(req, res, state);
+//   if (req.contacts && res.contacts.size() < req.max_contacts)
+//     checkObjectCollision(req, res, object);
+// }
+
+// void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& res,
+//                                   const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const
+// {
+//   //checkSelfCollision(req, res, state, acm);
+//   if (req.contacts && res.contacts.size() < req.max_contacts)
+//     checkObjectCollision(req, res, object, acm);
+// }
+
+// // ##################################################################################################################################
+
 }  // end of namespace collision_detection

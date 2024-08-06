@@ -38,6 +38,12 @@
 
 #include <moveit/collision_detection/collision_env.h>
 #include <moveit/collision_detection_fcl/collision_common.h>
+// Additional includes for object collision detection
+#include <moveit_msgs/CollisionObject.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_eigen/tf2_eigen.h>
 
 #if (MOVEIT_FCL_VERSION >= FCL_VERSION_CHECK(0, 6, 0))
 #include <fcl/broadphase/broadphase_collision_manager.h>
@@ -82,6 +88,16 @@ public:
   void checkRobotCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state1,
                            const moveit::core::RobotState& state2) const override;
 
+// // ############################################################################################################################
+//   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+//                             const moveit_msgs::CollisionObject& col_object) const override;
+  
+//   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+//                             const moveit_msgs::CollisionObject& col_object, const AllowedCollisionMatrix& acm) const override;
+
+
+// // ############################################################################################################################
+
   void distanceSelf(const DistanceRequest& req, DistanceResult& res,
                     const moveit::core::RobotState& state) const override;
 
@@ -108,8 +124,17 @@ protected:
   void checkRobotCollisionHelper(const CollisionRequest& req, CollisionResult& res,
                                  const moveit::core::RobotState& state, const AllowedCollisionMatrix* acm) const;
 
+  // /** \brief Bundles the different checkObjectCollision functions into a single function */
+  // void checkObjectCollisionHelper(const CollisionRequest& req, CollisionResult& res,
+  //                               const moveit_msgs::CollisionObject& col_object,
+  //                               const AllowedCollisionMatrix* acm) const;
+
   /** \brief Construct an FCL collision object from MoveIt's World::Object. */
   void constructFCLObjectWorld(const World::Object* obj, FCLObject& fcl_obj) const;
+
+  // /** \brief Construct an FCL collision object from MoveIt's moveit_msgs::CollisionObject. */
+  // void constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj, World::Object* world_object, FCLObject& fcl_obj) const;
+  
 
   /** \brief Updates the specified object in \c fcl_objs_ and in the manager from new data available in the World.
    *

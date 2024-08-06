@@ -38,6 +38,11 @@
 #include <moveit/collision_detection_fcl/collision_detector_allocator_fcl.h>
 #include <moveit/collision_detection_fcl/collision_common.h>
 
+#include <geometric_shapes/shapes.h>
+#include <geometric_shapes/shape_operations.h>
+#include <fcl/fcl.h>
+#include <moveit_msgs/CollisionObject.h>
+
 #include <moveit/collision_detection_fcl/fcl_compat.h>
 
 #if (MOVEIT_FCL_VERSION >= FCL_VERSION_CHECK(0, 6, 0))
@@ -50,6 +55,9 @@ namespace collision_detection
 {
 static const std::string NAME = "FCL";
 constexpr char LOGNAME[] = "collision_detection.fcl";
+
+// tf2_ros::Buffer tfBuffer;
+// tf2_ros::TransformListener tfListener(tfBuffer);
 
 namespace
 {
@@ -199,6 +207,52 @@ void CollisionEnvFCL::constructFCLObjectWorld(const World::Object* obj, FCLObjec
   }
 }
 
+// void CollisionEnvFCL::constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj, World::Object* world_object, FCLObject& fcl_obj) const {
+//   // Turn obj into World::Object*, because creatCollisionGeometry takes only links/attachedObjects/World::Objects as input-->Then call the other version of constructFCLObjectWorld
+
+//   // POSE----------- Adding the object's pose to World::Object ------------------------
+//   geometry_msgs::Pose object_pose_in_world = col_obj.pose;
+
+//   // Transform pose relative to header frame into pose relative to world frame
+//   if (col_obj.header.frame_id != "world") {
+//     try {
+//       geometry_msgs::TransformStamped fromHeaderToWorld = tfBuffer.lookupTransform("world", col_obj.header.frame_id, ros::Time(0), ros::Duration(1.0));
+//       // doTransform: (pose in source frame, pose in target frame, transformStamped)
+//       tf2::doTransform(col_obj.pose, object_pose_in_world, fromHeaderToWorld);
+//     } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
+//   }
+
+//   // Add the object's pose
+//   Eigen::Isometry3d pose;
+//   tf2::fromMsg(object_pose_in_world, pose);
+//   world_object->pose_ = pose;
+//   // ----------------------------------------------------------------------------------
+
+
+//   // SHAPES, SHAPE_POSES: Add primitives and their poses to the world object as shapes, shape_poses AND global_shape_poses
+//   for (size_t i = 0; i < col_obj.primitives.size(); ++i) {
+//     shapes::Shape* shape = shapes::constructShapeFromMsg(col_obj.primitives[i]);
+//     // Transforming not necessary for shape_poses, since shape/primitive/mesh/etc poses in CollisionObject and in World::Object are all relative to object's pose
+//     Eigen::Isometry3d shape_pose;
+//     tf2::fromMsg(col_obj.primitive_poses[i], shape_pose);
+//     world_object->shapes_.push_back(shapes::ShapeConstPtr(shape));
+//     world_object->shape_poses_.push_back(shape_pose);
+
+//     // GLOBAL_SHAPE_POSES: Transform pose relative to object pose frame into pose relative to world frame for global_shape_poses
+//     geometry_msgs::Pose global_pose;
+//     try {
+//       geometry_msgs::TransformStamped fromObjectPoseToWorld = tfBuffer.lookupTransform("world", "dynamic_object_frame", ros::Time(0), ros::Duration(1.0));
+//       tf2::doTransform(col_obj.primitive_poses[i], global_pose, fromObjectPoseToWorld);
+//     } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
+//     Eigen::Isometry3d global_shape_pose;
+//     tf2::fromMsg(global_pose, global_shape_pose);
+//     world_object->global_shape_poses_.push_back(global_shape_pose);
+
+//     // SUBFRAME_POSES & GLOBAL_SUBFRAME_POSES -- skipped for now
+//   }
+//   constructFCLObjectWorld(world_object, fcl_obj);
+// }
+
 void CollisionEnvFCL::constructFCLObjectRobot(const moveit::core::RobotState& state, FCLObject& fcl_obj) const
 {
   fcl_obj.collision_objects_.reserve(robot_geoms_.size());
@@ -339,6 +393,59 @@ void CollisionEnvFCL::checkRobotCollisionHelper(const CollisionRequest& req, Col
     }
   }
 }
+
+// // //************************Collision check function for object**********************************
+
+// void CollisionEnvFCL::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+//                                           const moveit_msgs::CollisionObject& col_object) const
+// {
+//   checkObjectCollisionHelper(req, res, col_object, nullptr);
+// }
+
+// void CollisionEnvFCL::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+//                                           const moveit_msgs::CollisionObject& col_object,
+//                                           const AllowedCollisionMatrix& acm) const
+// {
+//   checkObjectCollisionHelper(req, res, col_object, &acm);
+// }
+
+// void CollisionEnvFCL::checkObjectCollisionHelper(const CollisionRequest& req, CollisionResult& res,
+//                                                 const moveit_msgs::CollisionObject& col_object,
+//                                                 const AllowedCollisionMatrix* acm) const
+// {
+//   // Create FCL object for the Collision object
+//   FCLObject fcl_obj;
+//   if (!getWorld()->hasObject(col_object.id)) {
+//     World::Object* world_object = new World::Object(col_object.id);
+//     constructFCLObjectCollisionObject(col_object, world_object, fcl_obj);
+//   }
+//   else {
+//     World::ObjectConstPtr constPtr = getWorld()->getObject(col_object.id);
+//     const World::Object* world_object = constPtr.get();
+//     constructFCLObjectWorld(world_object, fcl_obj);
+//     //World::ObjectConstPtr world_object = World::getObject(col_object.id);
+//   }
+  
+
+//   CollisionData cd(&req, &res, acm);
+
+//   // for (std::size_t i = 0; !cd.done_ && i < fcl_obj.collision_objects_.size(); ++i)
+//   //   manager_->collide(fcl_obj.collision_objects_[i].get(), &cd, &collisionCallback);
+
+//   // if (req.distance) {
+//   //     DistanceRequest dreq;
+//   //     DistanceResult dres;
+
+//   //     dreq.acm = acm;
+//   //     distanceObject(dreq, dres, target_object, environment_objects);
+//   //     res.distance = dres.minimum_distance.distance;
+//   //     if (req.detailed_distance) {
+//   //         res.distance_result = dres;
+//   //     }
+//   // }
+// }
+// //*******************************************************************************************
+
 
 void CollisionEnvFCL::distanceSelf(const DistanceRequest& req, DistanceResult& res,
                                    const moveit::core::RobotState& state) const
