@@ -56,8 +56,8 @@ namespace collision_detection
 static const std::string NAME = "FCL";
 constexpr char LOGNAME[] = "collision_detection.fcl";
 
-// tf2_ros::Buffer tfBuffer;
-// tf2_ros::TransformListener tfListener(tfBuffer);
+// tf2_ros::Buffer tf_buffer_;
+// tf2_ros::TransformListener tf_listener_(tf_buffer_);
 
 namespace
 {
@@ -84,7 +84,7 @@ void checkFCLCapabilities(const DistanceRequest& req)
 }  // namespace
 
 CollisionEnvFCL::CollisionEnvFCL(const moveit::core::RobotModelConstPtr& model, double padding, double scale)
-  : CollisionEnv(model, padding, scale)
+  : CollisionEnv(model, padding, scale), tf_buffer_(), tf_listener_(tf_buffer_)
 {
   const std::vector<const moveit::core::LinkModel*>& links = robot_model_->getLinkModelsWithCollisionGeometry();
   std::size_t index;
@@ -121,7 +121,7 @@ CollisionEnvFCL::CollisionEnvFCL(const moveit::core::RobotModelConstPtr& model, 
 
 CollisionEnvFCL::CollisionEnvFCL(const moveit::core::RobotModelConstPtr& model, const WorldPtr& world, double padding,
                                  double scale)
-  : CollisionEnv(model, world, padding, scale)
+  : CollisionEnv(model, world, padding, scale), tf_buffer_(), tf_listener_(tf_buffer_)
 {
   const std::vector<const moveit::core::LinkModel*>& links = robot_model_->getLinkModelsWithCollisionGeometry();
   std::size_t index;
@@ -161,7 +161,7 @@ CollisionEnvFCL::~CollisionEnvFCL()
   getWorld()->removeObserver(observer_handle_);
 }
 
-CollisionEnvFCL::CollisionEnvFCL(const CollisionEnvFCL& other, const WorldPtr& world) : CollisionEnv(other, world)
+CollisionEnvFCL::CollisionEnvFCL(const CollisionEnvFCL& other, const WorldPtr& world) : CollisionEnv(other, world), tf_buffer_(), tf_listener_(tf_buffer_)
 {
   robot_geoms_ = other.robot_geoms_;
   robot_fcl_objs_ = other.robot_fcl_objs_;
@@ -209,49 +209,49 @@ void CollisionEnvFCL::constructFCLObjectWorld(const World::Object* obj, FCLObjec
 
 void CollisionEnvFCL::constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj, World::Object* world_object, FCLObject& fcl_obj) const {
   ROS_INFO("Hello from CollisionEnvFCL::constructFCLObjectCollisionObject().");
-//   // Turn obj into World::Object*, because creatCollisionGeometry takes only links/attachedObjects/World::Objects as input-->Then call the other version of constructFCLObjectWorld
+  // // Turn obj into World::Object*, because creatCollisionGeometry takes only links/attachedObjects/World::Objects as input-->Then call the other version of constructFCLObjectWorld
 
-//   // POSE----------- Adding the object's pose to World::Object ------------------------
-//   geometry_msgs::Pose object_pose_in_world = col_obj.pose;
+  // // POSE----------- Adding the object's pose to World::Object ------------------------
+  // geometry_msgs::Pose object_pose_in_world = col_obj.pose;
 
-//   // Transform pose relative to header frame into pose relative to world frame
-//   if (col_obj.header.frame_id != "world") {
-//     try {
-//       geometry_msgs::TransformStamped fromHeaderToWorld = tfBuffer.lookupTransform("world", col_obj.header.frame_id, ros::Time(0), ros::Duration(1.0));
-//       // doTransform: (pose in source frame, pose in target frame, transformStamped)
-//       tf2::doTransform(col_obj.pose, object_pose_in_world, fromHeaderToWorld);
-//     } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
-//   }
+  // // Transform pose relative to header frame into pose relative to world frame
+  // if (col_obj.header.frame_id != "world") {
+  //   try {
+  //     geometry_msgs::TransformStamped fromHeaderToWorld = tf_buffer_.lookupTransform("world", col_obj.header.frame_id, ros::Time(0), ros::Duration(1.0));
+  //     // doTransform: (pose in source frame, pose in target frame, transformStamped)
+  //     tf2::doTransform(col_obj.pose, object_pose_in_world, fromHeaderToWorld);
+  //   } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
+  // }
 
-//   // Add the object's pose
-//   Eigen::Isometry3d pose;
-//   tf2::fromMsg(object_pose_in_world, pose);
-//   world_object->pose_ = pose;
-//   // ----------------------------------------------------------------------------------
+  // // Add the object's pose
+  // Eigen::Isometry3d pose;
+  // tf2::fromMsg(object_pose_in_world, pose);
+  // world_object->pose_ = pose;
+  // // ----------------------------------------------------------------------------------
 
 
-//   // SHAPES, SHAPE_POSES: Add primitives and their poses to the world object as shapes, shape_poses AND global_shape_poses
-//   for (size_t i = 0; i < col_obj.primitives.size(); ++i) {
-//     shapes::Shape* shape = shapes::constructShapeFromMsg(col_obj.primitives[i]);
-//     // Transforming not necessary for shape_poses, since shape/primitive/mesh/etc poses in CollisionObject and in World::Object are all relative to object's pose
-//     Eigen::Isometry3d shape_pose;
-//     tf2::fromMsg(col_obj.primitive_poses[i], shape_pose);
-//     world_object->shapes_.push_back(shapes::ShapeConstPtr(shape));
-//     world_object->shape_poses_.push_back(shape_pose);
+  // // SHAPES, SHAPE_POSES: Add primitives and their poses to the world object as shapes, shape_poses AND global_shape_poses
+  // for (size_t i = 0; i < col_obj.primitives.size(); ++i) {
+  //   shapes::Shape* shape = shapes::constructShapeFromMsg(col_obj.primitives[i]);
+  //   // Transforming not necessary for shape_poses, since shape/primitive/mesh/etc poses in CollisionObject and in World::Object are all relative to object's pose
+  //   Eigen::Isometry3d shape_pose;
+  //   tf2::fromMsg(col_obj.primitive_poses[i], shape_pose);
+  //   world_object->shapes_.push_back(shapes::ShapeConstPtr(shape));
+  //   world_object->shape_poses_.push_back(shape_pose);
 
-//     // GLOBAL_SHAPE_POSES: Transform pose relative to object pose frame into pose relative to world frame for global_shape_poses
-//     geometry_msgs::Pose global_pose;
-//     try {
-//       geometry_msgs::TransformStamped fromObjectPoseToWorld = tfBuffer.lookupTransform("world", "dynamic_object_frame", ros::Time(0), ros::Duration(1.0));
-//       tf2::doTransform(col_obj.primitive_poses[i], global_pose, fromObjectPoseToWorld);
-//     } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
-//     Eigen::Isometry3d global_shape_pose;
-//     tf2::fromMsg(global_pose, global_shape_pose);
-//     world_object->global_shape_poses_.push_back(global_shape_pose);
+  //   // GLOBAL_SHAPE_POSES: Transform pose relative to object pose frame into pose relative to world frame for global_shape_poses
+  //   geometry_msgs::Pose global_pose;
+  //   try {
+  //     geometry_msgs::TransformStamped fromObjectPoseToWorld = tf_buffer_.lookupTransform("world", "dynamic_object_frame", ros::Time(0), ros::Duration(1.0));
+  //     tf2::doTransform(col_obj.primitive_poses[i], global_pose, fromObjectPoseToWorld);
+  //   } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
+  //   Eigen::Isometry3d global_shape_pose;
+  //   tf2::fromMsg(global_pose, global_shape_pose);
+  //   world_object->global_shape_poses_.push_back(global_shape_pose);
 
-//     // SUBFRAME_POSES & GLOBAL_SUBFRAME_POSES -- skipped for now
-//   }
-//   constructFCLObjectWorld(world_object, fcl_obj);
+  //   // SUBFRAME_POSES & GLOBAL_SUBFRAME_POSES -- skipped for now
+  // }
+  // constructFCLObjectWorld(world_object, fcl_obj);
 }
 
 void CollisionEnvFCL::constructFCLObjectRobot(const moveit::core::RobotState& state, FCLObject& fcl_obj) const

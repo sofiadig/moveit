@@ -178,6 +178,9 @@ protected:
 
   std::map<std::string, FCLObject> fcl_objs_;
 
+  tf2_ros::Buffer tf_buffer_;
+  tf2_ros::TransformListener tf_listener_;
+
 private:
   /** \brief Callback function executed for each change to the world environment */
   void notifyObjectChange(const ObjectConstPtr& obj, World::Action action);
