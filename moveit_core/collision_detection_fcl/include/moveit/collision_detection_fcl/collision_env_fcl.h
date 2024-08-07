@@ -88,15 +88,15 @@ public:
   void checkRobotCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state1,
                            const moveit::core::RobotState& state2) const override;
 
-// // ############################################################################################################################
-//   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-//                             const moveit_msgs::CollisionObject& col_object) const override;
+// ############################################################################################################################
+  void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                            const moveit_msgs::CollisionObject& col_object) const;// override;
   
-//   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-//                             const moveit_msgs::CollisionObject& col_object, const AllowedCollisionMatrix& acm) const override;
+  void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                            const moveit_msgs::CollisionObject& col_object, const AllowedCollisionMatrix& acm) const;// override;
 
 
-// // ############################################################################################################################
+// ############################################################################################################################
 
   void distanceSelf(const DistanceRequest& req, DistanceResult& res,
                     const moveit::core::RobotState& state) const override;
@@ -124,17 +124,20 @@ protected:
   void checkRobotCollisionHelper(const CollisionRequest& req, CollisionResult& res,
                                  const moveit::core::RobotState& state, const AllowedCollisionMatrix* acm) const;
 
-  // /** \brief Bundles the different checkObjectCollision functions into a single function */
-  // void checkObjectCollisionHelper(const CollisionRequest& req, CollisionResult& res,
-  //                               const moveit_msgs::CollisionObject& col_object,
-  //                               const AllowedCollisionMatrix* acm) const;
+// ##############################################################################################################################################
+  /** \brief Bundles the different checkObjectCollision functions into a single function */
+  void checkObjectCollisionHelper(const CollisionRequest& req, CollisionResult& res,
+                                const moveit_msgs::CollisionObject& col_object,
+                                const AllowedCollisionMatrix* acm) const;
+
+
+  /** \brief Construct an FCL collision object from MoveIt's moveit_msgs::CollisionObject. */
+  void constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj, World::Object* world_object, FCLObject& fcl_obj) const;
+// ##############################################################################################################################################
 
   /** \brief Construct an FCL collision object from MoveIt's World::Object. */
   void constructFCLObjectWorld(const World::Object* obj, FCLObject& fcl_obj) const;
 
-  // /** \brief Construct an FCL collision object from MoveIt's moveit_msgs::CollisionObject. */
-  // void constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj, World::Object* world_object, FCLObject& fcl_obj) const;
-  
 
   /** \brief Updates the specified object in \c fcl_objs_ and in the manager from new data available in the World.
    *
