@@ -90,10 +90,10 @@ public:
 
 // ############################################################################################################################
   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                            const moveit_msgs::CollisionObject& col_object) const;// override;
+                            const moveit_msgs::CollisionObject& col_object) const override;
   
   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                            const moveit_msgs::CollisionObject& col_object, const AllowedCollisionMatrix& acm) const;// override;
+                            const moveit_msgs::CollisionObject& col_object, const AllowedCollisionMatrix& acm) const override;
 
 
 // ############################################################################################################################

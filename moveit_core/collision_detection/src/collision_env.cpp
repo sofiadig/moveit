@@ -310,18 +310,18 @@ void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& 
                                   const moveit_msgs::CollisionObject& object) const
 {
   ROS_INFO("Hello from CollisionEnv::checkCollision().");
-  // //checkSelfCollision(req, res, state);
-  // if (req.contacts && res.contacts.size() < req.max_contacts)
-  //   checkObjectCollision(req, res, object);
+  //checkSelfCollision(req, res, state);
+  if (req.contacts && res.contacts.size() < req.max_contacts)
+    checkObjectCollision(req, res, object);
 }
 
 void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& res,
                                   const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const
 {
   ROS_INFO("Hello from CollisionEnv::checkCollision().");
-  // //checkSelfCollision(req, res, state, acm);
-  // if (req.contacts && res.contacts.size() < req.max_contacts)
-  //   checkObjectCollision(req, res, object, acm);
+  //checkSelfCollision(req, res, state, acm);
+  if (req.contacts && res.contacts.size() < req.max_contacts)
+    checkObjectCollision(req, res, object, acm);
 }
 
 // ##################################################################################################################################

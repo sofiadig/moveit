@@ -149,19 +149,21 @@ void CollisionEnvBullet::checkSelfCollisionHelper(const CollisionRequest& req, C
 }
 
 
-// void CollisionEnvBullet::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-//                                   const moveit_msgs::CollisionObject& /*object*/) const {
-//   res.collision = false;
-//   if (req.verbose)
-//     ROS_INFO_NAMED("collision_detection", "Using Bullet collision detection. No implementation of object collision checking in CollisionEnvBullet.");
-// }
-// void CollisionEnvBullet::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-//                                   const moveit_msgs::CollisionObject& /*object*/,
-//                                   const AllowedCollisionMatrix& /*acm*/) const {
-//   res.collision = false;
-//   if (req.verbose)
-//     ROS_INFO_NAMED("collision_detection", "Using Bullet collision detection. No implementation of object collision checking in CollisionEnvBullet.");
-// }
+void CollisionEnvBullet::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                  const moveit_msgs::CollisionObject& /*object*/) const {
+  ROS_INFO("Hello from CollisionEnvBullet::checkObjectCollision().");
+  // res.collision = false;
+  // if (req.verbose)
+  //   ROS_INFO_NAMED("collision_detection", "Using Bullet collision detection. No implementation of object collision checking in CollisionEnvBullet.");
+}
+void CollisionEnvBullet::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                  const moveit_msgs::CollisionObject& /*object*/,
+                                  const AllowedCollisionMatrix& /*acm*/) const {
+  ROS_INFO("Hello from CollisionEnvBullet::checkObjectCollision().");
+  // res.collision = false;
+  // if (req.verbose)
+  //   ROS_INFO_NAMED("collision_detection", "Using Bullet collision detection. No implementation of object collision checking in CollisionEnvBullet.");
+}
 
 
 void CollisionEnvBullet::checkRobotCollision(const CollisionRequest& req, CollisionResult& res,

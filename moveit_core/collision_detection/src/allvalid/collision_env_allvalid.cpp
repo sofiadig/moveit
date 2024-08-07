@@ -143,18 +143,20 @@ const std::string& CollisionDetectorAllocatorAllValid::getName() const
 }
 
 
-// void CollisionEnvAllValid::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-//                                   const moveit_msgs::CollisionObject& /*object*/) const {
-//   res.collision = false;
-//   if (req.verbose)
-//     ROS_INFO_NAMED("collision_detection", "Using AllValid collision detection. No collision checking is performed.");
-// }
-// void CollisionEnvAllValid::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-//                                   const moveit_msgs::CollisionObject& /*object*/,
-//                                   const AllowedCollisionMatrix& /*acm*/) const {
-//   res.collision = false;
-//   if (req.verbose)
-//     ROS_INFO_NAMED("collision_detection", "Using AllValid collision detection. No collision checking is performed.");
-// }
+void CollisionEnvAllValid::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                  const moveit_msgs::CollisionObject& /*object*/) const {
+  ROS_INFO("Hello from CollisionEnvAllValid::checkObjectCollision().");
+  // res.collision = false;
+  // if (req.verbose)
+  //   ROS_INFO_NAMED("collision_detection", "Using AllValid collision detection. No collision checking is performed.");
+}
+void CollisionEnvAllValid::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                  const moveit_msgs::CollisionObject& /*object*/,
+                                  const AllowedCollisionMatrix& /*acm*/) const {
+  ROS_INFO("Hello from CollisionEnvAllValid::checkObjectCollision().");
+  // res.collision = false;
+  // if (req.verbose)
+  //   ROS_INFO_NAMED("collision_detection", "Using AllValid collision detection. No collision checking is performed.");
+}
 
 }  // namespace collision_detection

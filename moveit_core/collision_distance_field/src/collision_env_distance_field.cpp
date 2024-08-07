@@ -1465,19 +1465,21 @@ void CollisionEnvDistanceField::checkCollision(const CollisionRequest& req, Coll
 
 
 
-// void CollisionEnvDistanceField::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-//                                                       const moveit_msgs::CollisionObject& /*object*/) const {
-//   res.collision = false;
-//   if (req.verbose)
-//     ROS_INFO_NAMED("collision_detection", "Using Distance Field collision detection. No implementation of object collision checking in CollisionEnvBullet.");
-// }
-// void CollisionEnvDistanceField::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-//                                                     const moveit_msgs::CollisionObject& /*object*/,
-//                                                     const AllowedCollisionMatrix& /*acm*/) const {
-//   res.collision = false;
-//   if (req.verbose)
-//     ROS_INFO_NAMED("collision_detection", "Using AllValid collision detection. No implementation of object collision checking in CollisionEnvBullet.");
-// }
+void CollisionEnvDistanceField::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                                      const moveit_msgs::CollisionObject& /*object*/) const {
+  ROS_INFO("Hello from CollisionEnvDistanceField::checkObjectCollision().");
+  // res.collision = false;
+  // if (req.verbose)
+  //   ROS_INFO_NAMED("collision_detection", "Using Distance Field collision detection. No implementation of object collision checking in CollisionEnvBullet.");
+}
+void CollisionEnvDistanceField::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                                    const moveit_msgs::CollisionObject& /*object*/,
+                                                    const AllowedCollisionMatrix& /*acm*/) const {
+  ROS_INFO("Hello from CollisionEnvDistanceField::checkObjectCollision().");
+  // res.collision = false;
+  // if (req.verbose)
+  //   ROS_INFO_NAMED("collision_detection", "Using AllValid collision detection. No implementation of object collision checking in CollisionEnvBullet.");
+}
 
 
 

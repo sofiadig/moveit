@@ -129,25 +129,25 @@ public:
   virtual void checkCollision(const CollisionRequest& req, CollisionResult& res, const moveit_msgs::CollisionObject& object,
                               const AllowedCollisionMatrix& acm) const;
 
-  // /** \brief Check whether the given object is in collision with the world. Any collisions between the object
-  //  *  and the world are considered. Self collisions are not checked.
-  //  *  @param req A CollisionRequest object that encapsulates the collision request
-  //  *  @param res A CollisionResult object that encapsulates the collision result
-  //  *  @param object The collision model for the object
-  //  *  @param state The kinematic state for which checks are being made
-  //  */
-  // virtual void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-  //                                  const moveit_msgs::CollisionObject& object) const = 0;
+  /** \brief Check whether the given object is in collision with the world. Any collisions between the object
+   *  and the world are considered. Self collisions are not checked.
+   *  @param req A CollisionRequest object that encapsulates the collision request
+   *  @param res A CollisionResult object that encapsulates the collision result
+   *  @param object The collision model for the object
+   *  @param state The kinematic state for which checks are being made
+   */
+  virtual void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                   const moveit_msgs::CollisionObject& object) const = 0;
 
-  //   /** \brief Check whether the given object is in collision with the world.
-  //  *  Allowed collisions are ignored. Self collisions are not checked.
-  //  *  @param req A CollisionRequest object that encapsulates the collision request
-  //  *  @param res A CollisionResult object that encapsulates the collision result
-  //  *  @param robot The collision model for the robot
-  //  *  @param state The kinematic state for which checks are being made
-  //  *  @param acm The allowed collision matrix.*/
-  // virtual void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-  //                                  const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const = 0;
+    /** \brief Check whether the given object is in collision with the world.
+   *  Allowed collisions are ignored. Self collisions are not checked.
+   *  @param req A CollisionRequest object that encapsulates the collision request
+   *  @param res A CollisionResult object that encapsulates the collision result
+   *  @param robot The collision model for the robot
+   *  @param state The kinematic state for which checks are being made
+   *  @param acm The allowed collision matrix.*/
+  virtual void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
+                                   const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const = 0;
 
 // ######################################################################################################################################################
 

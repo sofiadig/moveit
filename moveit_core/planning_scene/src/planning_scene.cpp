@@ -466,7 +466,7 @@ void PlanningScene::checkCollision(const collision_detection::CollisionRequest& 
                                    const moveit_msgs::CollisionObject& object) const
 {
   ROS_INFO("Hello from PlanningScene::checkCollision().");
-  //checkCollision(req, res, object, getAllowedCollisionMatrix());
+  checkCollision(req, res, object, getAllowedCollisionMatrix());
 }
 
 void PlanningScene::checkCollision(const collision_detection::CollisionRequest& req,
@@ -476,7 +476,7 @@ void PlanningScene::checkCollision(const collision_detection::CollisionRequest& 
 {
   ROS_INFO("Hello from PlanningScene::checkCollision().");
   // check collision with the world using the padded version
-  //getCollisionEnv()->checkObjectCollision(req, res, object, acm);
+  getCollisionEnv()->checkObjectCollision(req, res, object, acm);
 }
 
 // ##############################################################################################################
