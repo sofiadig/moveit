@@ -401,7 +401,7 @@ void CollisionEnvFCL::checkObjectCollision(const CollisionRequest& req, Collisio
                                           const moveit_msgs::CollisionObject& col_object) const
 {
   ROS_INFO("Hello from CollisionEnvFCL::checkObjectCollision().");
-  // checkObjectCollisionHelper(req, res, col_object, nullptr);
+  checkObjectCollisionHelper(req, res, col_object, nullptr);
 }
 
 void CollisionEnvFCL::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
@@ -409,7 +409,7 @@ void CollisionEnvFCL::checkObjectCollision(const CollisionRequest& req, Collisio
                                           const AllowedCollisionMatrix& acm) const
 {
   ROS_INFO("Hello from CollisionEnvFCL::checkObjectCollision().");
-  // checkObjectCollisionHelper(req, res, col_object, &acm);
+  checkObjectCollisionHelper(req, res, col_object, &acm);
 }
 
 void CollisionEnvFCL::checkObjectCollisionHelper(const CollisionRequest& req, CollisionResult& res,
@@ -418,24 +418,24 @@ void CollisionEnvFCL::checkObjectCollisionHelper(const CollisionRequest& req, Co
 {
 
   ROS_INFO("Hello from CollisionEnvFCL::checkObjectCollisionHelper().");
-  // // Create FCL object for the Collision object
-  // FCLObject fcl_obj;
-  // if (!getWorld()->hasObject(col_object.id)) {
-  //   World::Object* world_object = new World::Object(col_object.id);
-  //   constructFCLObjectCollisionObject(col_object, world_object, fcl_obj);
-  // }
-  // else {
-  //   World::ObjectConstPtr constPtr = getWorld()->getObject(col_object.id);
-  //   const World::Object* world_object = constPtr.get();
-  //   constructFCLObjectWorld(world_object, fcl_obj);
-  //   //World::ObjectConstPtr world_object = World::getObject(col_object.id);
-  // }
+  // Create FCL object for the Collision object
+  FCLObject fcl_obj;
+  if (!getWorld()->hasObject(col_object.id)) {
+    World::Object* world_object = new World::Object(col_object.id);
+    constructFCLObjectCollisionObject(col_object, world_object, fcl_obj);
+  }
+  else {
+    World::ObjectConstPtr constPtr = getWorld()->getObject(col_object.id);
+    const World::Object* world_object = constPtr.get();
+    constructFCLObjectWorld(world_object, fcl_obj);
+    //World::ObjectConstPtr world_object = World::getObject(col_object.id);
+  }
   
 
-  // CollisionData cd(&req, &res, acm);
+  CollisionData cd(&req, &res, acm);
 
-  // for (std::size_t i = 0; !cd.done_ && i < fcl_obj.collision_objects_.size(); ++i)
-  //   manager_->collide(fcl_obj.collision_objects_[i].get(), &cd, &collisionCallback);
+  for (std::size_t i = 0; !cd.done_ && i < fcl_obj.collision_objects_.size(); ++i)
+    manager_->collide(fcl_obj.collision_objects_[i].get(), &cd, &collisionCallback);
 
   // if (req.distance) {
   //     DistanceRequest dreq;
