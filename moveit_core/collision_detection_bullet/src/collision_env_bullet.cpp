@@ -150,7 +150,8 @@ void CollisionEnvBullet::checkSelfCollisionHelper(const CollisionRequest& req, C
 
 
 void CollisionEnvBullet::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                                  const moveit_msgs::CollisionObject& /*object*/) const {
+                                  const moveit_msgs::CollisionObject& /*object*/,
+                                  const geometry_msgs::TransformStamped& /*fromObjectPoseToWorld*/) const {
   ROS_INFO("Hello from CollisionEnvBullet::checkObjectCollision().");
   // res.collision = false;
   // if (req.verbose)
@@ -158,6 +159,7 @@ void CollisionEnvBullet::checkObjectCollision(const CollisionRequest& req, Colli
 }
 void CollisionEnvBullet::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
                                   const moveit_msgs::CollisionObject& /*object*/,
+                                  const geometry_msgs::TransformStamped& /*fromObjectPoseToWorld*/,
                                   const AllowedCollisionMatrix& /*acm*/) const {
   ROS_INFO("Hello from CollisionEnvBullet::checkObjectCollision().");
   // res.collision = false;

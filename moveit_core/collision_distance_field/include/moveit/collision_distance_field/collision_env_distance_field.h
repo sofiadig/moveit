@@ -157,9 +157,12 @@ public:
                               const AllowedCollisionMatrix& acm, GroupStateRepresentationPtr& gsr) const;
 
   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                              const moveit_msgs::CollisionObject& object) const override;
+                              const moveit_msgs::CollisionObject& object,
+                              const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const override;
   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                              const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const override;
+                              const moveit_msgs::CollisionObject& object,
+                              const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
+                              const AllowedCollisionMatrix& acm) const override;
 
 
   void checkRobotCollision(const CollisionRequest& req, CollisionResult& res,

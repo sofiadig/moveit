@@ -43,6 +43,8 @@
 #include <moveit_msgs/LinkScale.h>
 #include <moveit/collision_detection/world.h>
 #include <moveit_msgs/CollisionObject.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace collision_detection
 {
@@ -118,7 +120,8 @@ public:
    *  @param res A CollisionResult object that encapsulates the collision result
    *  @param object The kinematic state for which checks are being made         */
   virtual void checkCollision(const CollisionRequest& req, CollisionResult& res,
-                              const moveit_msgs::CollisionObject& object) const;
+                              const moveit_msgs::CollisionObject& object,
+                              const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const;
 
   /** \brief Check whether the robot model is in collision with itself or the world at a particular state.
    *  Allowed collisions specified by the allowed collision matrix are taken into account.
@@ -126,7 +129,9 @@ public:
    *  @param res A CollisionResult object that encapsulates the collision result
    *  @param object The kinematic state for which checks are being made
    *  @param acm The allowed collision matrix. */
-  virtual void checkCollision(const CollisionRequest& req, CollisionResult& res, const moveit_msgs::CollisionObject& object,
+  virtual void checkCollision(const CollisionRequest& req, CollisionResult& res,
+                              const moveit_msgs::CollisionObject& object,
+                              const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
                               const AllowedCollisionMatrix& acm) const;
 
   /** \brief Check whether the given object is in collision with the world. Any collisions between the object
@@ -137,7 +142,8 @@ public:
    *  @param state The kinematic state for which checks are being made
    */
   virtual void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                                   const moveit_msgs::CollisionObject& object) const = 0;
+                                   const moveit_msgs::CollisionObject& object,
+                                   const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const = 0;
 
     /** \brief Check whether the given object is in collision with the world.
    *  Allowed collisions are ignored. Self collisions are not checked.
@@ -147,7 +153,9 @@ public:
    *  @param state The kinematic state for which checks are being made
    *  @param acm The allowed collision matrix.*/
   virtual void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                                   const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const = 0;
+                                   const moveit_msgs::CollisionObject& object,
+                                   const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
+                                   const AllowedCollisionMatrix& acm) const = 0;
 
 // ######################################################################################################################################################
 

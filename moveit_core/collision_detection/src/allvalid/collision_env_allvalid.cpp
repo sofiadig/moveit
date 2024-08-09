@@ -144,7 +144,8 @@ const std::string& CollisionDetectorAllocatorAllValid::getName() const
 
 
 void CollisionEnvAllValid::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                                  const moveit_msgs::CollisionObject& /*object*/) const {
+                                                const moveit_msgs::CollisionObject& /*object*/,
+                                                const geometry_msgs::TransformStamped& /*fromObjectPoseToWorld*/) const {
   ROS_INFO("Hello from CollisionEnvAllValid::checkObjectCollision().");
   // res.collision = false;
   // if (req.verbose)
@@ -152,6 +153,7 @@ void CollisionEnvAllValid::checkObjectCollision(const CollisionRequest& req, Col
 }
 void CollisionEnvAllValid::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
                                   const moveit_msgs::CollisionObject& /*object*/,
+                                  const geometry_msgs::TransformStamped& /*fromObjectPoseToWorld*/,
                                   const AllowedCollisionMatrix& /*acm*/) const {
   ROS_INFO("Hello from CollisionEnvAllValid::checkObjectCollision().");
   // res.collision = false;

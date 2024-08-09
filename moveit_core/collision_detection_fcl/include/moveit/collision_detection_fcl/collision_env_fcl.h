@@ -40,8 +40,8 @@
 #include <moveit/collision_detection_fcl/collision_common.h>
 // Additional includes for object collision detection
 #include <moveit_msgs/CollisionObject.h>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
+// #include <tf2_ros/buffer.h>
+// #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_eigen/tf2_eigen.h>
 
@@ -90,10 +90,13 @@ public:
 
 // ############################################################################################################################
   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                            const moveit_msgs::CollisionObject& col_object) const override;
+                            const moveit_msgs::CollisionObject& col_object,
+                            const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const override;
   
   void checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                            const moveit_msgs::CollisionObject& col_object, const AllowedCollisionMatrix& acm) const override;
+                            const moveit_msgs::CollisionObject& col_object,
+                            const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
+                            const AllowedCollisionMatrix& acm) const override;
 
 
 // ############################################################################################################################
@@ -128,11 +131,15 @@ protected:
   /** \brief Bundles the different checkObjectCollision functions into a single function */
   void checkObjectCollisionHelper(const CollisionRequest& req, CollisionResult& res,
                                 const moveit_msgs::CollisionObject& col_object,
+                                const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
                                 const AllowedCollisionMatrix* acm) const;
 
 
   /** \brief Construct an FCL collision object from MoveIt's moveit_msgs::CollisionObject. */
-  void constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj, World::Object* world_object, FCLObject& fcl_obj) const;
+  void constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj,
+                                        World::Object* world_object,
+                                        FCLObject& fcl_obj,
+                                        const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const;
 // ##############################################################################################################################################
 
   /** \brief Construct an FCL collision object from MoveIt's World::Object. */
@@ -178,8 +185,8 @@ protected:
 
   std::map<std::string, FCLObject> fcl_objs_;
 
-  tf2_ros::Buffer tf_buffer_;
-  tf2_ros::TransformListener tf_listener_;
+  // tf2_ros::Buffer tf_buffer_;
+  // tf2_ros::TransformListener tf_listener_;
 
 private:
   /** \brief Callback function executed for each change to the world environment */

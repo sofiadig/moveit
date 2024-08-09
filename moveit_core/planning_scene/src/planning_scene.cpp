@@ -463,20 +463,22 @@ void PlanningScene::pushDiffs(const PlanningScenePtr& scene)
 
 void PlanningScene::checkCollision(const collision_detection::CollisionRequest& req,
                                    collision_detection::CollisionResult& res,
-                                   const moveit_msgs::CollisionObject& object) const
+                                   const moveit_msgs::CollisionObject& object,
+                                   const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const
 {
-  ROS_INFO("Hello from PlanningScene::checkCollision().");
-  checkCollision(req, res, object, getAllowedCollisionMatrix());
+  //ROS_INFO("Hello from PlanningScene::checkCollision().");
+  checkCollision(req, res, object, fromObjectPoseToWorld, getAllowedCollisionMatrix());
 }
 
 void PlanningScene::checkCollision(const collision_detection::CollisionRequest& req,
                                    collision_detection::CollisionResult& res,
                                    const moveit_msgs::CollisionObject& object,
+                                   const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
                                    const collision_detection::AllowedCollisionMatrix& acm) const
 {
-  ROS_INFO("Hello from PlanningScene::checkCollision().");
+  //ROS_INFO("Hello from PlanningScene::checkCollision().");
   // check collision with the world using the padded version
-  getCollisionEnv()->checkObjectCollision(req, res, object, acm);
+  getCollisionEnv()->checkObjectCollision(req, res, object, fromObjectPoseToWorld, acm);
 }
 
 // ##############################################################################################################

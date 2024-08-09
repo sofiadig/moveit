@@ -50,12 +50,15 @@
 #include <moveit_msgs/RobotTrajectory.h>
 #include <moveit_msgs/Constraints.h>
 #include <moveit_msgs/PlanningSceneComponents.h>
-#include <moveit_msgs/CollisionObject.h>
 #include <octomap_msgs/OctomapWithPose.h>
 #include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <boost/concept_check.hpp>
 #include <memory>
+
+#include <moveit_msgs/CollisionObject.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 // Import/export for windows dll's and visibility for gcc shared libraries.
 #include <moveit/moveit_planning_scene_export.h>
@@ -458,21 +461,23 @@ public:
 // ##############################################################################################################
     /** \brief Check whether the given object is in collision. */
   void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
-                      moveit_msgs::CollisionObject& object) const
+                      moveit_msgs::CollisionObject& object, const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const
   {
-    checkCollision(req, res, static_cast<const moveit_msgs::CollisionObject&>(object));
+    checkCollision(req, res, static_cast<const moveit_msgs::CollisionObject&>(object), fromObjectPoseToWorld);
   }
 
   /** \brief Check whether a specified state (\e robot_state) is in collision. The collision transforms of \e
    * robot_state are
    * expected to be up to date. */
   void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
-                      const moveit_msgs::CollisionObject& object) const;
+                      const moveit_msgs::CollisionObject& object, const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const;
 
     /** \brief Check whether a specified object (\e object) is in collision, with respect to a givenallowed collision matrix (\e acm).
      * This variant of the function takes a non-const \e robot_state and updates its link transforms if needed. */
   void checkCollision(const collision_detection::CollisionRequest& req, collision_detection::CollisionResult& res,
-                      const moveit_msgs::CollisionObject& object, const collision_detection::AllowedCollisionMatrix& acm) const;
+                      const moveit_msgs::CollisionObject& object,
+                      const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
+                      const collision_detection::AllowedCollisionMatrix& acm) const;
 
 // ##############################################################################################################
 

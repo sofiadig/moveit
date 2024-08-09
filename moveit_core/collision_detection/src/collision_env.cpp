@@ -307,21 +307,22 @@ void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& 
 // ##################################################################################################################################
 
 void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& res,
-                                  const moveit_msgs::CollisionObject& object) const
+                                  const moveit_msgs::CollisionObject& object,
+                                  const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const
 {
-  ROS_INFO("Hello from CollisionEnv::checkCollision().");
   //checkSelfCollision(req, res, state);
   if (req.contacts && res.contacts.size() < req.max_contacts)
-    checkObjectCollision(req, res, object);
+    checkObjectCollision(req, res, object, fromObjectPoseToWorld);
 }
 
 void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& res,
-                                  const moveit_msgs::CollisionObject& object, const AllowedCollisionMatrix& acm) const
+                                  const moveit_msgs::CollisionObject& object,
+                                  const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
+                                  const AllowedCollisionMatrix& acm) const
 {
-  ROS_INFO("Hello from CollisionEnv::checkCollision().");
   //checkSelfCollision(req, res, state, acm);
   if (req.contacts && res.contacts.size() < req.max_contacts)
-    checkObjectCollision(req, res, object, acm);
+    checkObjectCollision(req, res, object, fromObjectPoseToWorld, acm);
 }
 
 // ##################################################################################################################################

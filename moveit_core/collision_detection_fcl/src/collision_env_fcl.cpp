@@ -56,8 +56,6 @@ namespace collision_detection
 static const std::string NAME = "FCL";
 constexpr char LOGNAME[] = "collision_detection.fcl";
 
-// tf2_ros::Buffer tf_buffer_;
-// tf2_ros::TransformListener tf_listener_(tf_buffer_);
 
 namespace
 {
@@ -84,7 +82,7 @@ void checkFCLCapabilities(const DistanceRequest& req)
 }  // namespace
 
 CollisionEnvFCL::CollisionEnvFCL(const moveit::core::RobotModelConstPtr& model, double padding, double scale)
-  : CollisionEnv(model, padding, scale), tf_buffer_(), tf_listener_(tf_buffer_)
+  : CollisionEnv(model, padding, scale)//, tf_buffer_(), tf_listener_(tf_buffer_)
 {
   const std::vector<const moveit::core::LinkModel*>& links = robot_model_->getLinkModelsWithCollisionGeometry();
   std::size_t index;
@@ -121,7 +119,7 @@ CollisionEnvFCL::CollisionEnvFCL(const moveit::core::RobotModelConstPtr& model, 
 
 CollisionEnvFCL::CollisionEnvFCL(const moveit::core::RobotModelConstPtr& model, const WorldPtr& world, double padding,
                                  double scale)
-  : CollisionEnv(model, world, padding, scale), tf_buffer_(), tf_listener_(tf_buffer_)
+  : CollisionEnv(model, world, padding, scale)//, tf_buffer_(), tf_listener_(tf_buffer_)
 {
   const std::vector<const moveit::core::LinkModel*>& links = robot_model_->getLinkModelsWithCollisionGeometry();
   std::size_t index;
@@ -161,7 +159,7 @@ CollisionEnvFCL::~CollisionEnvFCL()
   getWorld()->removeObserver(observer_handle_);
 }
 
-CollisionEnvFCL::CollisionEnvFCL(const CollisionEnvFCL& other, const WorldPtr& world) : CollisionEnv(other, world), tf_buffer_(), tf_listener_(tf_buffer_)
+CollisionEnvFCL::CollisionEnvFCL(const CollisionEnvFCL& other, const WorldPtr& world) : CollisionEnv(other, world)//, tf_buffer_(), tf_listener_(tf_buffer_)
 {
   robot_geoms_ = other.robot_geoms_;
   robot_fcl_objs_ = other.robot_fcl_objs_;
@@ -207,7 +205,9 @@ void CollisionEnvFCL::constructFCLObjectWorld(const World::Object* obj, FCLObjec
   }
 }
 
-void CollisionEnvFCL::constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj, World::Object* world_object, FCLObject& fcl_obj) const {
+void CollisionEnvFCL::constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj,
+                                                        World::Object* world_object, FCLObject& fcl_obj,
+                                                        const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const {
   ROS_INFO("Hello from CollisionEnvFCL::constructFCLObjectCollisionObject().");
   // Turn obj into World::Object*, because creatCollisionGeometry takes only links/attachedObjects/World::Objects as input-->Then call the other version of constructFCLObjectWorld
 
@@ -216,11 +216,15 @@ void CollisionEnvFCL::constructFCLObjectCollisionObject(const moveit_msgs::Colli
 
   // Transform pose relative to header frame into pose relative to world frame
   if (col_obj.header.frame_id != "world") {
-    try {
-      geometry_msgs::TransformStamped fromHeaderToWorld = tf_buffer_.lookupTransform("world", col_obj.header.frame_id, ros::Time(0), ros::Duration(1.0));
-      // doTransform: (pose in source frame, pose in target frame, transformStamped)
-      tf2::doTransform(col_obj.pose, object_pose_in_world, fromHeaderToWorld);
-    } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
+    // try {
+    //   //lookupTransform(target_grame, source_frame
+    //   // time: The time at which the value of the transform is desired. (0 will get the latest)
+    //   // timeout: 	How long to block before failing 
+    //   //geometry_msgs::TransformStamped fromHeaderToWorld = tf_buffer_.lookupTransform("world", col_obj.header.frame_id, ros::Time(0), ros::Duration(1.0));
+    // } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
+    // doTransform: (pose in source frame, pose in target frame, transformStamped)
+    geometry_msgs::TransformStamped* fromHeaderToWorld = new geometry_msgs::TransformStamped();
+    tf2::doTransform(col_obj.pose, object_pose_in_world, *fromHeaderToWorld);
   }
 
   // Add the object's pose
@@ -241,10 +245,12 @@ void CollisionEnvFCL::constructFCLObjectCollisionObject(const moveit_msgs::Colli
 
     // GLOBAL_SHAPE_POSES: Transform pose relative to object pose frame into pose relative to world frame for global_shape_poses
     geometry_msgs::Pose global_pose;
-    try {
-      geometry_msgs::TransformStamped fromObjectPoseToWorld = tf_buffer_.lookupTransform("world", "dynamic_object_frame", ros::Time(0), ros::Duration(1.0));
-      tf2::doTransform(col_obj.primitive_poses[i], global_pose, fromObjectPoseToWorld);
-    } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
+
+    // try {
+    //   geometry_msgs::TransformStamped fromObjectPoseToWorld = tf_buffer_.lookupTransform("world", "dynamic_object_frame", ros::Time(0), ros::Duration(1.0));
+    // } catch (tf2::TransformException &ex) { ROS_WARN("%s", ex.what()); }
+
+    tf2::doTransform(col_obj.primitive_poses[i], global_pose, fromObjectPoseToWorld);
     Eigen::Isometry3d global_shape_pose;
     tf2::fromMsg(global_pose, global_shape_pose);
     world_object->global_shape_poses_.push_back(global_shape_pose);
@@ -398,31 +404,31 @@ void CollisionEnvFCL::checkRobotCollisionHelper(const CollisionRequest& req, Col
 //************************Collision check function for object**********************************
 
 void CollisionEnvFCL::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
-                                          const moveit_msgs::CollisionObject& col_object) const
+                                          const moveit_msgs::CollisionObject& col_object,
+                                          const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const
 {
-  ROS_INFO("Hello from CollisionEnvFCL::checkObjectCollision().");
-  checkObjectCollisionHelper(req, res, col_object, nullptr);
+  checkObjectCollisionHelper(req, res, col_object, fromObjectPoseToWorld, nullptr);
 }
 
 void CollisionEnvFCL::checkObjectCollision(const CollisionRequest& req, CollisionResult& res,
                                           const moveit_msgs::CollisionObject& col_object,
+                                          const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
                                           const AllowedCollisionMatrix& acm) const
 {
-  ROS_INFO("Hello from CollisionEnvFCL::checkObjectCollision().");
-  checkObjectCollisionHelper(req, res, col_object, &acm);
+  checkObjectCollisionHelper(req, res, col_object, fromObjectPoseToWorld, &acm);
 }
 
 void CollisionEnvFCL::checkObjectCollisionHelper(const CollisionRequest& req, CollisionResult& res,
                                                 const moveit_msgs::CollisionObject& col_object,
+                                                const geometry_msgs::TransformStamped& fromObjectPoseToWorld,
                                                 const AllowedCollisionMatrix* acm) const
 {
 
-  ROS_INFO("Hello from CollisionEnvFCL::checkObjectCollisionHelper().");
   // Create FCL object for the Collision object
   FCLObject fcl_obj;
   if (!getWorld()->hasObject(col_object.id)) {
     World::Object* world_object = new World::Object(col_object.id);
-    constructFCLObjectCollisionObject(col_object, world_object, fcl_obj);
+    constructFCLObjectCollisionObject(col_object, world_object, fcl_obj, fromObjectPoseToWorld);
   }
   else {
     World::ObjectConstPtr constPtr = getWorld()->getObject(col_object.id);
@@ -433,6 +439,9 @@ void CollisionEnvFCL::checkObjectCollisionHelper(const CollisionRequest& req, Co
   
 
   CollisionData cd(&req, &res, acm);
+  //cd.enableGroup(nullptr);  // This function sets active_components_only_. No need to set for checking all collisions.
+                            // If the collision request includes a group name, this set contains the pointers to the link models that are considered for collision.
+                            // If the pointer is NULL, all collisions are considered.
 
   for (std::size_t i = 0; !cd.done_ && i < fcl_obj.collision_objects_.size(); ++i)
     manager_->collide(fcl_obj.collision_objects_[i].get(), &cd, &collisionCallback);
