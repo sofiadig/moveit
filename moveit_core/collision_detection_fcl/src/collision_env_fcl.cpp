@@ -208,7 +208,6 @@ void CollisionEnvFCL::constructFCLObjectWorld(const World::Object* obj, FCLObjec
 void CollisionEnvFCL::constructFCLObjectCollisionObject(const moveit_msgs::CollisionObject& col_obj,
                                                         World::Object* world_object, FCLObject& fcl_obj,
                                                         const geometry_msgs::TransformStamped& fromObjectPoseToWorld) const {
-  ROS_INFO("Hello from CollisionEnvFCL::constructFCLObjectCollisionObject().");
   // Turn obj into World::Object*, because creatCollisionGeometry takes only links/attachedObjects/World::Objects as input-->Then call the other version of constructFCLObjectWorld
 
   // POSE----------- Adding the object's pose to World::Object ------------------------
@@ -257,6 +256,19 @@ void CollisionEnvFCL::constructFCLObjectCollisionObject(const moveit_msgs::Colli
 
     // SUBFRAME_POSES & GLOBAL_SUBFRAME_POSES -- skipped for now
   }
+
+  for (size_t i = 0; i < col_obj.meshes.size(); ++i) {
+    shapes::Shape* shape = shapes::constructShapeFromMsg(col_obj.meshes[i]);
+    if (shape) {
+        Eigen::Isometry3d eigen_pose;
+        tf2::fromMsg(col_obj.mesh_poses[i], eigen_pose);
+        world_object->shapes_.push_back(shapes::ShapeConstPtr(shape));
+        world_object->shape_poses_.push_back(eigen_pose);
+    }
+  }
+
+
+
   constructFCLObjectWorld(world_object, fcl_obj);
 }
 
@@ -426,20 +438,20 @@ void CollisionEnvFCL::checkObjectCollisionHelper(const CollisionRequest& req, Co
 
   // Create FCL object for the Collision object
   FCLObject fcl_obj;
-  if (!getWorld()->hasObject(col_object.id)) {
-    World::Object* world_object = new World::Object(col_object.id);
-    constructFCLObjectCollisionObject(col_object, world_object, fcl_obj, fromObjectPoseToWorld);
-  }
-  else {
-    World::ObjectConstPtr constPtr = getWorld()->getObject(col_object.id);
-    const World::Object* world_object = constPtr.get();
-    constructFCLObjectWorld(world_object, fcl_obj);
-    //World::ObjectConstPtr world_object = World::getObject(col_object.id);
-  }
+  // if (!getWorld()->hasObject(col_object.id)) {
+  World::Object* world_object = new World::Object(col_object.id);
+  constructFCLObjectCollisionObject(col_object, world_object, fcl_obj, fromObjectPoseToWorld);
+  // }
+  // else {
+  //   World::ObjectConstPtr constPtr = getWorld()->getObject(col_object.id);
+  //   const World::Object* world_object = constPtr.get();
+  //   constructFCLObjectWorld(world_object, fcl_obj);
+  //   //World::ObjectConstPtr world_object = World::getObject(col_object.id);
+  // }
   
 
   CollisionData cd(&req, &res, acm);
-  //cd.enableGroup(nullptr);  // This function sets active_components_only_. No need to set for checking all collisions.
+  //cd.enableGroup(nullptr);  // This function sets active_components_only_. No need to set when checking all collisions.
                             // If the collision request includes a group name, this set contains the pointers to the link models that are considered for collision.
                             // If the pointer is NULL, all collisions are considered.
 
