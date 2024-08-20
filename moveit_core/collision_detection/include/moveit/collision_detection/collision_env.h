@@ -43,6 +43,8 @@
 #include <moveit_msgs/LinkScale.h>
 #include <moveit/collision_detection/world.h>
 
+// Git branch test
+
 namespace collision_detection
 {
 MOVEIT_CLASS_FORWARD(CollisionEnv);  // Defines CollisionEnvPtr, ConstPtr, WeakPtr... etc
