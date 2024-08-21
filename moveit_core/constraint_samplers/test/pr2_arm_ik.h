@@ -149,6 +149,8 @@ public:
   void computeIKShoulderRoll(const Eigen::Isometry3f& g_in, const double& shoulder_roll_initial_guess,
                              std::vector<std::vector<double> >& solution) const;
 
+  //  std::vector<std::vector<double> > solution_ik_;/// a vector of ik solutions
+
   /**
      @brief get chain information about the arm. This populates the IK query response, filling in joint level
      information including names and joint limits.

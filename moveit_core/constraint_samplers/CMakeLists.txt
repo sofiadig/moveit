@@ -26,9 +26,11 @@ install(DIRECTORY include/ DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION})
 
 if(CATKIN_ENABLE_TESTING)
   find_package(orocos_kdl REQUIRED)
+  find_package(angles REQUIRED)
   find_package(tf2_kdl REQUIRED)
   find_package(rostest REQUIRED)
-  include_directories(SYSTEM ${orocos_kdl_INCLUDE_DIRS} ${tf2_kdl_INCLUDE_DIRS})
+  include_directories(SYSTEM ${orocos_kdl_INCLUDE_DIRS} ${angles_INCLUDE_DIRS} ${tf2_kdl_INCLUDE_DIRS})
+
 
   add_rostest_gtest(test_constraint_samplers
     test/constraint_samplers.test
@@ -42,6 +44,7 @@ if(CATKIN_ENABLE_TESTING)
     gmock_main
     ${MOVEIT_LIB_NAME}
     ${catkin_LIBRARIES}
+    ${angles_LIBRARIES}
     ${orocos_kdl_LIBRARIES}
     ${urdfdom_LIBRARIES}
     ${urdfdom_headers_LIBRARIES}

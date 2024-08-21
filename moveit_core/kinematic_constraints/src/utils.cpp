@@ -529,6 +529,7 @@ bool constructConstraints(XmlRpc::XmlRpcValue& params, moveit_msgs::Constraints&
   return collectConstraints(params["constraints"], constraints);
 }
 
+
 bool resolveConstraintFrames(const moveit::core::RobotState& state, moveit_msgs::Constraints& constraints)
 {
   for (auto& c : constraints.position_constraints)

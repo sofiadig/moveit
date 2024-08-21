@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-/* Author: Ioan Sucan, Jens Petit */
+/* Author: Ioan Sucan, Jens Petit, Pradeep Rajendran */
 
 #pragma once
 
@@ -82,6 +82,9 @@ public:
   void checkRobotCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state1,
                            const moveit::core::RobotState& state2) const override;
 
+				CollisionResult checkCollisionBetweenObjectGroups(std::vector<std::string> const& object_group1,
+				                                                  std::vector<std::string> const& object_group2) const override;
+
   void distanceSelf(const DistanceRequest& req, DistanceResult& res,
                     const moveit::core::RobotState& state) const override;
 
@@ -113,7 +116,7 @@ protected:
 
   /** \brief Updates the specified object in \c fcl_objs_ and in the manager from new data available in the World.
    *
-   *  If it does not exist in world, it is deleted. If it's not existing in \c fcl_objs_ yet, it's added there. */
+				 *  If it does not exist in world, it is deleted. If it's not existing in \c fcl_objs_ yet, it's added there. */
   void updateFCLObject(const std::string& id);
 
   /** \brief Out of the current robot state and its attached bodies construct an FCLObject which can then be used to

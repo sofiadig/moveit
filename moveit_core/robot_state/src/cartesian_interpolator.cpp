@@ -263,7 +263,7 @@ double CartesianInterpolator::computeCartesianPath(RobotState* start_state, cons
   Eigen::Isometry3d offset = link_offset.inverse();
 
   // the target can be in the local reference frame (in which case we rotate it)
-  Eigen::Isometry3d rotated_target = global_reference_frame ? target : start_pose * target;
+  Eigen::Isometry3d rotated_target = global_reference_frame ? target : start_pose * target;  // valid isometry
 
   Eigen::Quaterniond start_quaternion(start_pose.linear());
   Eigen::Quaterniond target_quaternion(rotated_target.linear());

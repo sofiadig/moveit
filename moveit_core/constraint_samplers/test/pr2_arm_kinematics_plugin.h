@@ -141,6 +141,7 @@ public:
 
   /**
    * @brief Given a desired pose of the end-effector, compute the joint angles to reach it
+   * @param ik_link_name - the name of the link for which IK is being computed
    * @param ik_pose the desired pose of the link
    * @param ik_seed_state an initial guess solution for the inverse kinematics
    * @return True if a valid solution was found, false otherwise
@@ -208,6 +209,9 @@ public:
 
   /**
    * @brief Given a set of joint angles and a set of links, compute their pose
+   * @param request  - the request contains the joint angles, set of links for which poses are to be computed and a
+   * timeout
+   * @param response - the response contains stamped pose information for all the requested links
    * @return True if a valid solution was found, false otherwise
    */
   bool getPositionFK(const std::vector<std::string>& link_names, const std::vector<double>& joint_angles,

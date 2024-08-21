@@ -124,14 +124,14 @@ public:
    *subgroup IKSolvers, the function will attempt to generate a sampler from the various subgroup solvers.
    *   - It will attempt to determine which constraints act on the IK link for the sub-group IK solvers, and attempts to
    *create ConstraintSampler functions by recursively calling \ref selectDefaultSampler for the sub-group.
-   *   - If any samplers are valid, it adds them to a vector of type ConstraintSamplerPtr.
+   *   - If any samplers are valid, it adds them to a vector of type \ref ConstraintSamplerPtr.
    *   - Once it has iterated through each sub-group, if any samplers are valid, they are returned in a
    *UnionConstraintSampler, along with a JointConstraintSampler if one exists.
    * @param scene The planning scene that will be used to create the ConstraintSampler
    * @param group_name The group name for which to create a sampler
    * @param constr The set of constraints for which to create a sampler
    *
-   * @return A valid ConstraintSamplerPtr if one could be allocated, otherwise an empty ConstraintSamplerPtr.
+   * @return A valid \ref ConstraintSamplerPtr if one could be allocated, and otherwise an empty \ref ConstraintSamplerPtr
    */
   static ConstraintSamplerPtr selectDefaultSampler(const planning_scene::PlanningSceneConstPtr& scene,
                                                    const std::string& group_name,

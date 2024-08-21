@@ -140,6 +140,7 @@ struct KinematicsResult
 MOVEIT_CLASS_FORWARD(KinematicsBase);  // Defines KinematicsBasePtr, ConstPtr, WeakPtr... etc
 
 /**
+ * @class KinematicsBase
  * @brief Provides an interface for kinematics solvers.
  */
 class KinematicsBase

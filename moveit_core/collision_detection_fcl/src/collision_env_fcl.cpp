@@ -44,8 +44,6 @@
 #include <fcl/broadphase/broadphase_dynamic_AABB_tree.h>
 #endif
 
-//Testing git mybranch
-
 namespace collision_detection
 {
 static const std::string NAME = "FCL";
@@ -339,6 +337,57 @@ void CollisionEnvFCL::checkRobotCollisionHelper(const CollisionRequest& req, Col
     }
   }
 }
+
+		CollisionResult CollisionEnvFCL::checkCollisionBetweenObjectGroups(std::vector<std::string> const& object_group1,
+		                                                                   std::vector<std::string> const& object_group2) const
+		{
+			auto manager1 = std::make_unique<fcl::DynamicAABBTreeCollisionManagerd>();
+			auto manager2 = std::make_unique<fcl::DynamicAABBTreeCollisionManagerd>();
+
+			// Populate managers with the FCL objects corresponding entries in object_groups
+			for (const auto & object_name : object_group1)
+			{
+				if (fcl_objs_.count(object_name) == 0)
+					ROS_ERROR_STREAM_NAMED("collision_detection.fcl",
+					                       "FCL object by the name: " << object_name << " does not exist.");
+
+				auto fcl_obj = fcl_objs_.at(object_name);
+				fcl_obj.registerTo(manager1.get());
+			}
+			for (const auto & object_name : object_group2)
+			{
+				if (fcl_objs_.count(object_name) == 0)
+					ROS_ERROR_STREAM_NAMED("collision_detection.fcl",
+					                       "FCL object by the name: " << object_name << " does not exist.");
+
+				auto fcl_obj = fcl_objs_.at(object_name);
+				fcl_obj.registerTo(manager2.get());
+			}
+
+			// Perform collision detection
+			CollisionRequest req;
+			CollisionResult res;
+			req.distance = true;
+			req.contacts = true;
+			req.verbose = true;
+			req.max_contacts = 1000;
+			req.max_contacts_per_pair = 1000;
+			req.cost = false;
+
+			CollisionData cd(&req, &res, nullptr);
+
+			manager1->collide(manager2.get(), &cd, &collisionCallback);
+
+			std::cout << cd.res_->collision << " " << cd.res_->distance << " " << cd.res_->contact_count << " " << std::endl;
+		//	for (const auto & i : cd.res_->contacts){
+		//		std::cout << i.first.first << " with " << i.first.second << " at ";
+		//		for (const auto & j : i.second){
+		//			std::cout << j.pos << " \n";
+		//		}
+		//		std::cout << std::endl << std::endl << std::endl;
+		//	}
+			return *cd.res_;
+		}
 
 void CollisionEnvFCL::distanceSelf(const DistanceRequest& req, DistanceResult& res,
                                    const moveit::core::RobotState& state) const

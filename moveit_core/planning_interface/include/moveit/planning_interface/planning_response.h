@@ -37,6 +37,7 @@
 #pragma once
 
 #include <moveit/robot_trajectory/robot_trajectory.h>
+#include <moveit_msgs/MoveItErrorCodes.h>
 #include <moveit/utils/moveit_error_code.h>
 #include <moveit_msgs/MotionPlanResponse.h>
 #include <moveit_msgs/MotionPlanDetailedResponse.h>
@@ -85,6 +86,10 @@ struct MotionPlanResponse
 
   void getMessage(moveit_msgs::MotionPlanResponse& msg) const;
 
+  robot_trajectory::RobotTrajectoryPtr trajectory_;
+  double planning_time_;
+  moveit_msgs::MoveItErrorCodes error_code_;
+  
   // Enable checking of query success or failure, for example if(response) ...
   explicit operator bool() const
   {
@@ -99,6 +104,7 @@ struct MotionPlanDetailedResponse
   std::vector<robot_trajectory::RobotTrajectoryPtr> trajectory_;
   std::vector<std::string> description_;
   std::vector<double> processing_time_;
+  //moveit_msgs::MoveItErrorCodes error_code_;
   moveit::core::MoveItErrorCode error_code_;
   moveit_msgs::RobotState start_state_;
   std::string planner_id_;
