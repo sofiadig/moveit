@@ -1,0 +1,4 @@
+<launch>
+  <param name="robot_description" textfile="$(find isaac_firefly_adaptation)/urdf/fake_firefly.urdf" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
+</launch>

@@ -1,0 +1,18 @@
+<launch>
+  <!-- Load the robot model -->
+  <param name="fake/robot_description" value="src/moveit/isaac_firefly_adaptation/urdf/fake_firefly.urdf"/>
+
+  <!-- Launch move_group for planning -->
+  <include file="$(find isaac_firefly_adaptation)/launch/demo.launch"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
+
+  <!-- Launch the collision checker node -->
+  <node name="collision_check" pkg="collision_check" type="collision_check_node" output="screen" respawn="true">
+    <param name="robot_mesh_path" value="$(find isaac_firefly_adaptation)/meshes/firefly.dae"/>
+  </node>
+
+  <!-- Launch RViz with custom configuration -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find collision_check)/config/collision_check.rviz"/>
+
+
+</launch>

@@ -1,0 +1,16 @@
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz/RobotModel
+      Enabled: true
+      Robot Description: fake/robot_description
+    - Class: moveit_rviz_plugin/PlanningScene
+      Enabled: true
+      Scene Geometry:
+        Scene Alpha: 0.9
+        Scene Color: 50; 230; 50
+      Scene Robot:
+        Enabled: true
+    - Class: moveit_rviz_plugin/Trajectory
+      Enabled: true
+      Robot Description: fake/robot_description
