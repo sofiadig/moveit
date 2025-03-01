@@ -369,7 +369,8 @@ CollisionResult CollisionEnvFCL::checkCollisionBetweenObjectGroups(std::vector<s
   CollisionResult res;
   req.distance = true;
   req.contacts = true;
-  req.verbose = true;
+  req.verbose = false; // When true it prints "Found 1 contacts between 'dynamic_object' (type 'Object') and 'pillar' (type 'Object'), which constitute a collision. 1 contacts will be stored"
+                       // as many times as there are computed contact points
   req.max_contacts = 1000;
   req.max_contacts_per_pair = 1000;
   req.cost = false;
@@ -380,11 +381,11 @@ CollisionResult CollisionEnvFCL::checkCollisionBetweenObjectGroups(std::vector<s
 
   //std::cout << cd.res_->collision << " " << cd.res_->distance << " " << cd.res_->contact_count << " " << std::endl;
   for (const auto & i : cd.res_->contacts){
-    std::cout << i.first.first << " with " << i.first.second << " at [";
+    std::cout << i.first.first << " with " << i.first.second << " at ";
     for (const auto & j : i.second){
-      std::cout << j.pos;
+      std::cout << "[" << j.pos.x() << ", " << j.pos.y() << ", " << j.pos.z() << "]" << std::endl;
     }
-    std::cout << "]" << std::endl;
+    //std::cout << std::endl;
   }
   return *cd.res_;
 }
