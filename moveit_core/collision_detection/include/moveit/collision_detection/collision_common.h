@@ -103,6 +103,10 @@ struct Contact
 
   /** \brief The two nearest points connecting the two bodies */
   Eigen::Vector3d nearest_points[2];
+
+  bool operator==(const Contact& other) const {
+        return pos == other.pos && normal == other.normal && depth == other.depth;
+    }
 };
 
 /** \brief When collision costs are computed, this structure contains information about the partial cost incurred in a
